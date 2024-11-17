@@ -1,3 +1,4 @@
+"./BSP/ds1307.o"
 "./Src/main.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
