@@ -142,15 +142,60 @@ typedef struct{
 /*
  * Mini Notes
  * We need the following functionalities from the RTC module
- * 1. Set the Seconds
- * 2. Set the Minutes
- * 3. Set the Hours
- * 4. Or we can have an API which can collectively set HH:MM:SS (Set Time)
- * 5. Set Date
- * 6. Set Month
- * 7. Set Year
- * 8. Or we can have an API which can collectively set DD-MM-YY (Set Dates)
+ * 1. set the Seconds
+ * 2. set the Minutes
+ * 3. set the Hours
+ * 4. Or we can have an API which can collectively set HH:MM:SS (set Time)
+ * 5. set Date
+ * 6. set Month
+ * 7. set Year
+ * 8. Or we can have an API which can collectively set DD-MM-YY (set Dates)
  */
+
+/*
+ * set Seconds
+ */
+void RTC_DS1307_setSeconds(uint8_t seconds);
+
+/*
+ * set Minutes
+ */
+void RTC_DS1307_setMinutes(uint8_t minutes);
+
+/*
+ * set Hours
+ */
+void RTC_DS1307_setHours(uint8_t hours);
+
+/*
+ * set Time
+ */
+void RTC_DS1307_setTime(uint8_t seconds, uint8_t minutes, uint8_t hours);
+
+/*
+ * set Day
+ */
+void RTC_DS1307_setDat(uint8_t *day);
+
+/*
+ * set Date
+ */
+void RTC_DS1307_setDate(uint8_t date);
+
+/*
+ * set Month
+ */
+void RTC_DS1307_setMonth(uint8_t month);
+
+/*
+ * set Year
+ */
+void RTC_DS1307_setYear(uint8_t year);
+
+/*
+ * set Full Date
+ */
+void RTC_DS1307_setFullDate(uint8_t date, uint8_t month, uint8_t year);
 
 
 #endif /* DS1307_H_ */
