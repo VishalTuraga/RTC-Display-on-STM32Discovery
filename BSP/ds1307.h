@@ -153,49 +153,64 @@ typedef struct{
  */
 
 /*
- * set Seconds
+ * Covert Decimal to BCD and vice versa
+ */
+uint8_t BCDtoDec(uint8_t BCD);
+uint8_t DectoBCD(uint8_t Dec);
+
+/*
+ * set and get Seconds
  */
 void RTC_DS1307_setSeconds(uint8_t seconds);
+uint8_t RTC_DS1307_getSeconds(void);
 
 /*
- * set Minutes
+ * set and get Minutes
  */
 void RTC_DS1307_setMinutes(uint8_t minutes);
+uint8_t RTC_DS1307_getMinutes(void);
 
 /*
- * set Hours
+ * set and get Hours
  */
 void RTC_DS1307_setHours(uint8_t hours);
+uint8_t RTC_DS1307_getHours(void);
 
 /*
- * set Time
+ * set and get Time
  */
 void RTC_DS1307_setTime(uint8_t seconds, uint8_t minutes, uint8_t hours);
+uint8_t RTC_DS1307_getTime(void);
 
 /*
- * set Day
+ * set and get Day
  */
-void RTC_DS1307_setDat(uint8_t *day);
+void RTC_DS1307_setDay(uint8_t *day);
+uint8_t RTC_DS1307_getDay(void);
 
 /*
- * set Date
+ * set and get Date
  */
 void RTC_DS1307_setDate(uint8_t date);
+uint8_t RTC_DS1307_getDate(void);
 
 /*
- * set Month
+ * set and get Month
  */
 void RTC_DS1307_setMonth(uint8_t month);
+uint8_t RTC_DS1307_getMonth(void);
 
 /*
- * set Year
+ * set and get Year
  */
 void RTC_DS1307_setYear(uint8_t year);
+uint8_t RTC_DS1307_getYear(void);
 
 /*
- * set Full Date
+ * set and get Full Date
  */
 void RTC_DS1307_setFullDate(uint8_t date, uint8_t month, uint8_t year);
+uint8_t RTC_DS1307_getFullDate(void);
 
 
 #endif /* DS1307_H_ */
