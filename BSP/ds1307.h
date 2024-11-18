@@ -54,6 +54,10 @@
 
 #include "stm32f407xx.h"
 
+/*
+ * RTC Module Slave Address
+ */
+#define RTC_DS1307_SLAVE_ADDR		0x68
 
 /*
  * Address macros
@@ -149,6 +153,13 @@ typedef struct{
 #define RTC_DS1307_REG_YEAR_OUT					7
 
 /*
+ * Time format options
+ */
+#define TIME_FORMAT_12HRS_AM					0
+#define TIME_FORMAT_12HRS_PM					1
+#define TIME_FORMAT_24HRS						2
+
+/*
  * API protocols
  */
 
@@ -172,22 +183,9 @@ uint8_t BCDtoDec(uint8_t BCD);
 uint8_t DectoBCD(uint8_t Dec);
 
 /*
- * set and get Seconds
+ * Initialize the RTC module
  */
-void RTC_DS1307_setSeconds();
-void RTC_DS1307_getSeconds(void);
-
-/*
- * set and get Minutes
- */
-void RTC_DS1307_setMinutes(uint8_t minu);
-void RTC_DS1307_getMinutes(void);
-
-/*
- * set and get Hours
- */
-void RTC_DS1307_setHours(uint8_t hours);
-void RTC_DS1307_getHours(void);
+uint8_t RTC_DS1307_Init(void);
 
 /*
  * set and get Time
@@ -196,34 +194,10 @@ void RTC_DS1307_setTime(RTC_Handle_time_t *timeHandle);
 void RTC_DS1307_getTime(RTC_Handle_time_t *timeHandle);
 
 /*
- * set and get Day
- */
-void RTC_DS1307_setDay(uint8_t *day);
-void RTC_DS1307_getDay(void);
-
-/*
- * set and get Date
- */
-void RTC_DS1307_setDate(uint8_t date);
-void RTC_DS1307_getDate(void);
-
-/*
- * set and get Month
- */
-void RTC_DS1307_setMonth(uint8_t month);
-void RTC_DS1307_getMonth(void);
-
-/*
- * set and get Year
- */
-void RTC_DS1307_setYear(uint8_t year);
-void RTC_DS1307_getYear(void);
-
-/*
  * set and get Full Date
  */
-void RTC_DS1307_setFullDate(uint8_t date, uint8_t month, uint8_t year);
-void RTC_DS1307_getFullDate(void);
+void RTC_DS1307_setFullDate(RTC_Handle_date_t *dateHandle);
+void RTC_DS1307_getFullDate(RTC_Handle_date_t *dateHandle);
 
 
 #endif /* DS1307_H_ */

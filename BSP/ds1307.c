@@ -7,4 +7,3 @@
 
 #include "ds1307.h"
 
-#define RTC_DS1307_SLAVE_ADDR		0x68
