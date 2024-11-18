@@ -19,7 +19,7 @@
  * 	- RTC registers are located in address locations 00h to 07h
  * 	- RAM registers are located in address locations 08h to 3Fh
  * 	- Contents of the time and calendar registers are in BCD Format
- * 	- When CH bit is set to 1, oscillator is disabled. When reset to 0, oscillator is enabled
+ * 	- When CH (Clock Halt) bit is set to 1, oscillator is disabled. When reset to 0, oscillator is enabled
  * 	- On first application of power, date and time are reset to 01/01/00 01 00:00:00 (MM/DD/YY DOW HH:MM:SS) (DOW -> Day of Week)
  * 	- Bit 6 of hours register is defined as the 12 hour or 24 hour mode select bit. When HIGH->12 hour mode select.
  * 	- In 12 hour mode, bit 5 is the AM/PM bit with Logic HIGH being PM
@@ -53,6 +53,19 @@
 #define DS1307_H_
 
 #include "stm32f407xx.h"
+
+/*
+ * Application Configuration
+ * I2C peripheral - I2C1
+ * I2C1 SCL - PB6
+ * I2C1 CDA - PB7
+ */
+#define RTC_DS1307_I2C				I2C1
+#define RTC_DS1307_I2C_PORT			GPIOB
+#define RTC_DS1307_I2C_SCL			GPIO_PIN_6
+#define RTC_DS1307_I2C_SDA			GPIO_PIN_7
+#define RTC_DS1307_I2C_PIN_SPEED	GPIO_OUT_SPEED_LOW
+#define RTC_Ds1307_I2C_PUPD			GPIO_PUPD_PULLUP
 
 /*
  * RTC Module Slave Address
