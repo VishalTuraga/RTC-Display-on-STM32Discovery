@@ -177,12 +177,6 @@ typedef struct{
  */
 
 /*
- * Covert Decimal to BCD and vice versa
- */
-uint8_t BCDtoDec(uint8_t BCD);
-uint8_t DectoBCD(uint8_t Dec);
-
-/*
  * Initialize the RTC module
  */
 uint8_t RTC_DS1307_Init(void);

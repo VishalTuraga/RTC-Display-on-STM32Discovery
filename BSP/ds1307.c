@@ -7,3 +7,8 @@
 
 #include "ds1307.h"
 
+/*
+ * Covert Decimal to BCD and vice versa
+ */
+static uint8_t BCDtoDec(uint8_t BCD);
+static uint8_t DectoBCD(uint8_t Dec);
