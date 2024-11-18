@@ -7,11 +7,179 @@
 
 #include "ds1307.h"
 
+I2C_Handle_t rtcHandle;
+
+static void RTC_DS1307_I2C_PinConfig();
+static void RTC_SD1307_I2C_Config();
+
+static void RTC_DS1307_I2C_PinConfig()
+{
+	GPIO_Handle_t sda, scl;
+	memset(&sda,0,sizeof(sda));
+	memset(&scl,0,sizeof(scl));
+
+	sda.pGPIOx = RTC_DS1307_I2C_PORT;
+	sda.GPIO_PinConfig.GPIO_PinNumber = RTC_DS1307_I2C_SDA;
+	sda.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+	sda.GPIO_PinConfig.GPIO_PinAltFunMode = GPIO_ALTFN_AF4;
+	sda.GPIO_PinConfig.GPIO_PinPuPdControl = RTC_Ds1307_I2C_PUPD;
+	sda.GPIO_PinConfig.GPIO_PinSpeed = RTC_DS1307_I2C_PIN_SPEED;
+	sda.GPIO_PinConfig.GPIO_PinOPType = GPIO_OUT_TYPE_OD;
+
+	GPIO_Init(&sda);
+
+	scl.pGPIOx = RTC_DS1307_I2C_PORT;
+	scl.GPIO_PinConfig.GPIO_PinNumber = RTC_DS1307_I2C_SCL;
+	scl.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+	scl.GPIO_PinConfig.GPIO_PinAltFunMode = GPIO_ALTFN_AF4;
+	scl.GPIO_PinConfig.GPIO_PinSpeed = RTC_DS1307_I2C_PIN_SPEED;
+	scl.GPIO_PinConfig.GPIO_PinOPType = GPIO_OUT_TYPE_OD;
+	scl.GPIO_PinConfig.GPIO_PinPuPdControl = RTC_Ds1307_I2C_PUPD;
+
+	GPIO_Init(&scl);
+}
+
+static void RTC_SD1307_I2C_Config()
+{
+
+}
+
+/*
+ * Initialize the RTC module
+ */
+/*********************************************************************
+ * @fn      		  - RTC_DS1307_Init
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+uint8_t RTC_DS1307_Init(void)
+{
+	// 1. Iniitialize the GPIO pins for I2C
+	RTC_DS1307_I2C_PinConfig();
+
+	// 2. Initialize the I2C pins
+
+	// 3. Enable the I2C pins
+
+}
+
+/*
+ * set and get Time
+ */
+/*********************************************************************
+ * @fn      		  - RTC_DS1307_setTime
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+void RTC_DS1307_setTime(RTC_Handle_time_t *timeHandle)
+{
+
+}
+
+/*********************************************************************
+ * @fn      		  - RTC_DS1307_getTime
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+void RTC_DS1307_getTime(RTC_Handle_time_t *timeHandle)
+{
+
+}
+
+/*
+ * set and get Full Date
+ */
+/*********************************************************************
+ * @fn      		  - RTC_DS1307_setFullDate
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+void RTC_DS1307_setFullDate(RTC_Handle_date_t *dateHandle)
+{
+
+}
+
+/*********************************************************************
+ * @fn      		  - RTC_DS1307_getFullDate
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+void RTC_DS1307_getFullDate(RTC_Handle_date_t *dateHandle)
+{
+
+}
+
 /*
  * Covert Decimal to BCD and vice versa
  */
-static uint8_t BCDtobin(uint8_t BCD);
-static uint8_t bintoBCD(uint8_t bin);
+/*********************************************************************
+ * @fn      		  - BCDtobin
+ *
+ * @brief             - This function converts BCD value to binary
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+static uint8_t BCDtobin(uint8_t BCD)
+{
+
+}
+
+/*********************************************************************
+ * @fn      		  - BCDtobin
+ *
+ * @brief             - This function converts BCD value to binary
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+static uint8_t bintoBCD(uint8_t bin)
+{
+
+}
 
 /*********************************************************************
  * @fn      		  - BCDtobin
