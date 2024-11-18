@@ -69,19 +69,32 @@
 #define RTC_DS1307_RAM_START		0x08
 
 /*
+ * Day macros
+ */
+#define SUNDAY		1
+#define MONDAY		2
+#define TUESDAY		3
+#define WEDNESDAY	4
+#define THURSDAY	5
+#define FRIDAY		6
+#define SATURDAY	7
+
+/*
  * Data Structure to handle the information
  */
 
 typedef struct{
-	uint8_t RTC_DS1307_Seconds;
-	uint8_t RTC_DS1307_Minutes;
-	uint8_t RTC_DS1307_Hours;
-	uint8_t RTC_DS1307_Day;
-	uint8_t RTC_DS1307_Date;
-	uint8_t RTC_DS1307_Month;
-	uint8_t RTC_DS1307_Year;
-	uint8_t RTC_DS1307_Control;
-};
+	uint8_t seconds;
+	uint8_t minutes;
+	uint8_t hours;
+}RTC_Handle_time_t;
+
+typedef struct{
+	uint8_t date;
+	uint8_t month;
+	uint8_t year;
+	uint8_t day;
+}RTC_Handle_date_t;
 
 /*
  * RTC_DS1307_REG_SECONDS Macros
@@ -161,56 +174,56 @@ uint8_t DectoBCD(uint8_t Dec);
 /*
  * set and get Seconds
  */
-void RTC_DS1307_setSeconds(uint8_t seconds);
-uint8_t RTC_DS1307_getSeconds(void);
+void RTC_DS1307_setSeconds();
+void RTC_DS1307_getSeconds(void);
 
 /*
  * set and get Minutes
  */
-void RTC_DS1307_setMinutes(uint8_t minutes);
-uint8_t RTC_DS1307_getMinutes(void);
+void RTC_DS1307_setMinutes(uint8_t minu);
+void RTC_DS1307_getMinutes(void);
 
 /*
  * set and get Hours
  */
 void RTC_DS1307_setHours(uint8_t hours);
-uint8_t RTC_DS1307_getHours(void);
+void RTC_DS1307_getHours(void);
 
 /*
  * set and get Time
  */
-void RTC_DS1307_setTime(uint8_t seconds, uint8_t minutes, uint8_t hours);
-uint8_t RTC_DS1307_getTime(void);
+void RTC_DS1307_setTime(RTC_Handle_time_t *timeHandle);
+void RTC_DS1307_getTime(RTC_Handle_time_t *timeHandle);
 
 /*
  * set and get Day
  */
 void RTC_DS1307_setDay(uint8_t *day);
-uint8_t RTC_DS1307_getDay(void);
+void RTC_DS1307_getDay(void);
 
 /*
  * set and get Date
  */
 void RTC_DS1307_setDate(uint8_t date);
-uint8_t RTC_DS1307_getDate(void);
+void RTC_DS1307_getDate(void);
 
 /*
  * set and get Month
  */
 void RTC_DS1307_setMonth(uint8_t month);
-uint8_t RTC_DS1307_getMonth(void);
+void RTC_DS1307_getMonth(void);
 
 /*
  * set and get Year
  */
 void RTC_DS1307_setYear(uint8_t year);
-uint8_t RTC_DS1307_getYear(void);
+void RTC_DS1307_getYear(void);
 
 /*
  * set and get Full Date
  */
 void RTC_DS1307_setFullDate(uint8_t date, uint8_t month, uint8_t year);
-uint8_t RTC_DS1307_getFullDate(void);
+void RTC_DS1307_getFullDate(void);
 
 
 #endif /* DS1307_H_ */
