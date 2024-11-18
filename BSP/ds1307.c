@@ -6,12 +6,21 @@
  */
 
 #include "ds1307.h"
+#include <stdint.h>
+#include <string.h>
 
 I2C_Handle_t rtcHandle;
 
-static void RTC_DS1307_I2C_PinConfig();
-static void RTC_SD1307_I2C_Config();
+static void RTC_DS1307_I2C_PinConfig(void);
+static void RTC_DS1307_I2C_Config(void);
+static void RTC_DS1307_write(uint8_t data, uint8_t addr);
+static uint8_t RTC_DS1307_read(uint8_t addr);
+static uint8_t bintoBCD(uint8_t bin);
+static uint8_t BCDtobin(uint8_t BCD);
 
+/*
+ * Helper functions
+ */
 static void RTC_DS1307_I2C_PinConfig()
 {
 	GPIO_Handle_t sda, scl;
@@ -39,7 +48,7 @@ static void RTC_DS1307_I2C_PinConfig()
 	GPIO_Init(&scl);
 }
 
-static void RTC_SD1307_I2C_Config()
+static void RTC_DS1307_I2C_Config()
 {
 	rtcHandle.pI2Cx = RTC_DS1307_I2C;
 	rtcHandle.I2C_Config.I2C_ACKControl = I2C_ACKCTRL_ACK_EN;
@@ -59,7 +68,8 @@ static void RTC_SD1307_I2C_Config()
  *
  * @param[in]         -
  *
- * @return            -  none
+ * @return            - if it returns 1 -> init failed (as CH bit is 1)
+ * 					  -	if it returns 0 -> init succeess (as CH bit is 0)
  *
  * @Note              -  none
 
@@ -70,8 +80,18 @@ uint8_t RTC_DS1307_Init(void)
 	RTC_DS1307_I2C_PinConfig();
 
 	// 2. Initialize the I2C pins
+	RTC_DS1307_I2C_Config();
 
-	// 3. Enable the I2C pins
+	// 3. Enable the I2C peripheral
+	I2C_PeripheralControl(RTC_DS1307_I2C, ENABLE);
+
+	// 4. By default, the CH pin is set to 1. To start the clock, we should make CH = 0
+	RTC_DS1307_write(0x00,RTC_DS1307_REG_SECONDS);
+
+	// 5. Read back clock halt bit to confirm if it is really set to 0
+	uint8_t clockState = RTC_DS1307_read(RTC_DS1307_REG_SECONDS);
+
+	return ((clockState >> 7) & 0x1);
 
 }
 
@@ -92,6 +112,38 @@ uint8_t RTC_DS1307_Init(void)
  *********************************************************************/
 void RTC_DS1307_setTime(RTC_Handle_time_t *timeHandle)
 {
+	uint8_t secondBCD = bintoBCD(timeHandle->seconds);
+	uint8_t minuteBCD = bintoBCD(timeHandle->minutes);
+	uint8_t hourBCD = bintoBCD(timeHandle->hours);
+	uint8_t temp = 0;
+
+	RTC_DS1307_write(secondBCD & 0x7F, RTC_DS1307_REG_SECONDS);
+
+	RTC_DS1307_write(minuteBCD, RTC_DS1307_REG_MINUTES);
+
+	if(timeHandle->timeFormat == RTC_DS1307_TIME_FORMAT_24HRS)
+	{
+		temp = 0 << 6; // resetting the bit 6 to make is 24 hour
+		temp |= ((hourBCD/10) << 4);
+		temp |= hourBCD%10;
+	}
+	else
+	{
+		temp = 1 << 6; // setting the bit 6 to make is 12 hour
+		if(timeHandle->timeFormat == RTC_DS1307_TIME_FORMAT_12HRS_PM) // setting/resetting the 5th bit based on AM PM
+		{
+			temp |= 1 << 5;
+		}
+		else
+		{
+			temp &= ~(1 << 5);
+		}
+		temp |= ((hourBCD/10) << 4);
+		temp |= (hourBCD%10);
+	}
+	RTC_DS1307_write(temp,RTC_DS1307_REG_HOURS);
+
+	temp = 0;
 
 }
 
@@ -149,6 +201,56 @@ void RTC_DS1307_getFullDate(RTC_Handle_date_t *dateHandle)
 
 }
 
+/*********************************************************************
+ * @fn      		  - RTC_DS1307_read
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+uint8_t RTC_DS1307_read(uint8_t addr)
+{
+	/* slave will start sending the data from where an address pointer is pointing to
+	 * Therefore, we should first put initialize a pointer to the position from which we want to read (before we perform the read)
+	 */
+
+	uint8_t data;
+
+	// 1. Data write to set the pointer to the address from which we want to read
+	I2C_MasterSendData(&rtcHandle, &addr, 1, RTC_DS1307_SLAVE_ADDR, 0);
+
+	// 2. Now we read from the data in the address held in addr and store in the variable data
+	I2C_MasterReceiveData(&rtcHandle, &data, 1, RTC_DS1307_SLAVE_ADDR, 0);
+
+	return data;
+}
+
+/*********************************************************************
+ * @fn      		  - RTC_DS1307_write
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+
+ *********************************************************************/
+void RTC_DS1307_write(uint8_t data, uint8_t addr)
+{
+	uint8_t tx[2];
+	tx[0] = addr;
+	tx[1] = data;
+
+	I2C_MasterSendData(&rtcHandle, tx, 2, RTC_DS1307_SLAVE_ADDR, 0);
+}
+
 /*
  * Covert Decimal to BCD and vice versa
  */
@@ -166,45 +268,10 @@ void RTC_DS1307_getFullDate(RTC_Handle_date_t *dateHandle)
  *********************************************************************/
 static uint8_t BCDtobin(uint8_t BCD)
 {
-
-}
-
-/*********************************************************************
- * @fn      		  - BCDtobin
- *
- * @brief             - This function converts BCD value to binary
- *
- * @param[in]         -
- *
- * @return            -  none
- *
- * @Note              -  none
-
- *********************************************************************/
-static uint8_t bintoBCD(uint8_t bin)
-{
-
-}
-
-/*********************************************************************
- * @fn      		  - BCDtobin
- *
- * @brief             - This function converts BCD value to binary
- *
- * @param[in]         -
- *
- * @return            -  none
- *
- * @Note              -  none
-
- *********************************************************************/
-static uint8_t BCDtobin(uint8_t BCD)
-{
-	uint8_t bin;
 	uint8_t A0,A1;
 
-	A1 = (uint8_t)((bin >> 4)*10);
-	A0 = (bin & (uint8_t)0x0F);
+	A1 = (uint8_t)((BCD >> 4)*10);
+	A0 = (BCD & (uint8_t)0x0F);
 	return (A1+A0);
 }
 

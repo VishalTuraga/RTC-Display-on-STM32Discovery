@@ -31,6 +31,49 @@
  * 	- DS1307 SLAVE ADDRESS = 0b1101000 => 0x68
  */
 
+/************************************************************************************
+ * Communication Notes																*
+ * **********************************************************************************
+ * Data Write - Slave Receiver Mode													*
+ * **********************************************************************************
+ * 	- Master writes to the RTC module. RTC module (Slave) will be listening			*
+ * 	|S|SlaveAddr|A|Word Address|A|Data|A|......|A|Data|A|P|							*
+ * 																					*
+ * 	1. Master generates the start bit												*
+ * 	2. Master sends the slave address. Slave responds with ACK bit					*
+ * 	3. Master sends the register address to write to. Slave responds with ACK bit	*
+ * 	4. Master sends the data. Slave responds with ACK								*
+ * 	5. Master generates the stop bit												*
+ * **********************************************************************************
+ * Data Read - Slave Transmitter 													*
+ * **********************************************************************************
+ * - RTC module writes to the master. Master will be listening						*
+ * |S|SlaveAddr|A|Data|A|Data|A|.....|A|Data|!A|P|									*
+ * 																					*
+ * 	1. Master generates the start bit												*
+ * 	2. Master sends the slave address. Slave respodns with ACK bit					*
+ * 	3. Slave sends the data to the master. Master responds with ACK bit				*
+ * 	4. Slave sends the last data to the master. Master responds with NACK bit		*
+ * 	5. Master generates the stop bit 												*
+ ************************************************************************************
+ * Data Read (write pointer, then read) - Slave receive and Transmit				*
+ ************************************************************************************
+ * - We first have to initialize a data pointer using data_write					*
+ * - Then we perform data read to fetch the data from the register					*
+ * _______________________________________________________________________________	*																					*
+ * |S|SlaveAddr|0|A|Word Address|A|Sr|SlaveAddr|1|A|Data|A|Data|A|.....|Data|!A|P|	*
+ * <---------------------write--------------------><------------read------------->	*
+ * 																					*
+ * 1. Master generates the start bit												*
+ * 2. Master sends the slave address. Slave responds with ACK bit					*
+ * 3. Master sends the register address to write to. Slave responds with an ACK		*
+ * 4. Master generates a repeated start bit. (going to change to read mode)			*
+ * 5. Master sends the slave address. Slave responds with ACK bit					*
+ * 6. Slave sends the data to the master. Master responds with ACK bit				*
+ * 7. Slave sends the last data to the master. Master responds with NACK bit		*
+ * 8. Master generates the stop bit													*
+ ************************************************************************************/
+
 /*
  * Register map
  * ADDRESS	BIT7	BIT6	BIT5	BIT4	BIT3	BIT2	BIT1	BIT0	Function	Range
@@ -105,6 +148,7 @@ typedef struct{
 	uint8_t seconds;
 	uint8_t minutes;
 	uint8_t hours;
+	uint8_t timeFormat;
 }RTC_Handle_time_t;
 
 typedef struct{
@@ -169,9 +213,9 @@ typedef struct{
 /*
  * Time format options
  */
-#define TIME_FORMAT_12HRS_AM					0
-#define TIME_FORMAT_12HRS_PM					1
-#define TIME_FORMAT_24HRS						2
+#define RTC_DS1307_TIME_FORMAT_12HRS_AM			0
+#define RTC_DS1307_TIME_FORMAT_12HRS_PM			1
+#define RTC_DS1307_TIME_FORMAT_24HRS			2
 
 /*
  * API protocols
