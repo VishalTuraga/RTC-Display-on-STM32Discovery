@@ -41,7 +41,12 @@ static void RTC_DS1307_I2C_PinConfig()
 
 static void RTC_SD1307_I2C_Config()
 {
+	rtcHandle.pI2Cx = RTC_DS1307_I2C;
+	rtcHandle.I2C_Config.I2C_ACKControl = I2C_ACKCTRL_ACK_EN;
+	rtcHandle.I2C_Config.I2C_DeviceAddress = RTC_DS1307_SLAVE_ADDR;
+	rtcHandle.I2C_Config.I2C_SCLSpeed = RTC_DS1307_I2C_SPEED;
 
+	I2C_Init(&rtcHandle);
 }
 
 /*
