@@ -2,10 +2,10 @@
 ../BSP/ds1307.c:51:13:RTC_DS1307_I2C_Config	1
 ../BSP/ds1307.c:77:9:RTC_DS1307_Init	1
 ../BSP/ds1307.c:113:6:RTC_DS1307_setTime	3
-../BSP/ds1307.c:162:6:RTC_DS1307_getTime	1
-../BSP/ds1307.c:182:6:RTC_DS1307_setFullDate	1
-../BSP/ds1307.c:199:6:RTC_DS1307_getFullDate	1
-../BSP/ds1307.c:216:9:RTC_DS1307_read	1
-../BSP/ds1307.c:245:6:RTC_DS1307_write	1
-../BSP/ds1307.c:269:16:BCDtobin	1
-../BSP/ds1307.c:290:16:bintoBCD	2
+../BSP/ds1307.c:164:6:RTC_DS1307_getTime	1
+../BSP/ds1307.c:184:6:RTC_DS1307_setFullDate	1
+../BSP/ds1307.c:225:6:RTC_DS1307_getFullDate	1
+../BSP/ds1307.c:242:9:RTC_DS1307_read	1
+../BSP/ds1307.c:271:6:RTC_DS1307_write	1
+../BSP/ds1307.c:295:16:BCDtobin	1
+../BSP/ds1307.c:316:16:bintoBCD	2

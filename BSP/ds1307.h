@@ -188,7 +188,7 @@ typedef struct{
  * RTC_DS1307_REG_DATE Macros
  */
 #define RTC_DS1307_REG_DATE_DATE				0
-#define RTC_DS1307_REG_DATE_10DATE				0
+#define RTC_DS1307_REG_DATE_10DATE				4
 
 /*
  * RTC_DS1307_REG_MONTH Macros
@@ -205,10 +205,10 @@ typedef struct{
 /*
  * RTC_DS1307_REG_CONTROL Macros
  */
-#define RTC_DS1307_REG_YEAR_RS0					0
-#define RTC_DS1307_REG_YEAR_RS1					1
-#define RTC_DS1307_REG_YEAR_SQWE				4
-#define RTC_DS1307_REG_YEAR_OUT					7
+#define RTC_DS1307_REG_CONTROL_RS0				0
+#define RTC_DS1307_REG_CONTROLRS1				1
+#define RTC_DS1307_REG_CONTROL_SQWE				4
+#define RTC_DS1307_REG_CONTROLOUT				7
 
 /*
  * Time format options
