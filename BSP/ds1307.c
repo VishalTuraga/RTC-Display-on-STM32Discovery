@@ -183,30 +183,12 @@ void RTC_DS1307_getTime(RTC_Handle_time_t *timeHandle)
  *********************************************************************/
 void RTC_DS1307_setFullDate(RTC_Handle_date_t *dateHandle)
 {
-	uint8_t temp = 0;
+	RTC_DS1307_write(dateHandle->date, RTC_DS1307_REG_DATE);
 
-	// set date
-	uint8_t value = bintoBCD(dateHandle->date);
-	temp |= ((value/10) << RTC_DS1307_REG_DATE_10DATE); // store 10s digit of date (BCD) in bit 4 and 5
-	temp |= ((value%10) << RTC_DS1307_REG_DATE_DATE); // store 1s digit of date (BCD) in bit 0-3
-	RTC_DS1307_write(temp, RTC_DS1307_REG_DATE);
+	RTC_DS1307_write(dateHandle->month, RTC_DS1307_REG_MONTH);
 
-	temp = 0;
-	// set month
-	value = bintoBCD(dateHandle->month);
-	temp |= ((value/10) << RTC_DS1307_REG_MONTH_10MONTH); // store 10s digit of month (BCD) in bit 4
-	temp |= ((value%10) << RTC_DS1307_REG_MONTH_MONTH); // store 1s digit of month (BCD) in bit 0-3
-	RTC_DS1307_write(temp, RTC_DS1307_REG_MONTH);
+	RTC_DS1307_write(dateHandle->year, RTC_DS1307_REG_YEAR);
 
-	temp = 0;
-	// set year
-	value = bintoBCD(dateHandle->year);
-	temp |= ((value/10) << RTC_DS1307_REG_YEAR_10YEAR); // store 10s digit of month (BCD) in bit 4
-	temp |= ((value%10) << RTC_DS1307_REG_YEAR_YEAR); // store 1s digit of month (BCD) in bit 0-3
-	RTC_DS1307_write(temp, RTC_DS1307_REG_YEAR);
-
-	temp = 0;
-	//set day
 	RTC_DS1307_write(dateHandle->day, RTC_DS1307_REG_DAY);
 }
 
