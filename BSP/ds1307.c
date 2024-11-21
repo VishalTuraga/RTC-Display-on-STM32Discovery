@@ -241,6 +241,24 @@ void RTC_DS1307_setFullDate(RTC_Handle_date_t *dateHandle)
  *********************************************************************/
 void RTC_DS1307_getFullDate(RTC_Handle_date_t *dateHandle)
 {
+	uint8_t value;
+
+	// Fetch the day
+	value = RTC_DS1307_read(RTC_DS1307_REG_DAY);
+	dateHandle->day = value;
+
+	// fetch the date
+	value = RTC_DS1307_read(RTC_DS1307_REG_DATE);
+	dateHandle->date = BCDtobin(value);
+
+	// fetch the month
+	value = RTC_DS1307_read(RTC_DS1307_REG_MONTH);
+	dateHandle->month = BCDtobin(value);
+
+	// fetch the date
+	value = RTC_DS1307_read(RTC_DS1307_REG_YEAR);
+	dateHandle->year = BCDtobin(value);
+
 
 }
 
