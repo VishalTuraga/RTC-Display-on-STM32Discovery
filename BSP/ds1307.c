@@ -112,8 +112,13 @@ uint8_t RTC_DS1307_Init(void)
  *********************************************************************/
 void RTC_DS1307_setTime(RTC_Handle_time_t *timeHandle)
 {
+	// Set the seconds
 	uint8_t secondBCD = bintoBCD(timeHandle->seconds);
+
+	// set the minutes
 	uint8_t minuteBCD = bintoBCD(timeHandle->minutes);
+
+	// set the hours
 	uint8_t hourBCD = bintoBCD(timeHandle->hours);
 	uint8_t temp = 0;
 
@@ -142,9 +147,6 @@ void RTC_DS1307_setTime(RTC_Handle_time_t *timeHandle)
 		temp |= (hourBCD%10);
 	}
 	RTC_DS1307_write(temp,RTC_DS1307_REG_HOURS);
-
-	temp = 0;
-
 }
 
 /*********************************************************************
