@@ -163,7 +163,42 @@ void RTC_DS1307_setTime(RTC_Handle_time_t *timeHandle)
  *********************************************************************/
 void RTC_DS1307_getTime(RTC_Handle_time_t *timeHandle)
 {
+	uint8_t value;
 
+	// fetch seconds data
+	value = RTC_DS1307_read(RTC_DS1307_REG_SECONDS);
+	// clear the CH bit as it is not relevant to us when we fetch the seconds value
+	value &= ~(1 << RTC_DS1307_REG_SECONDS_CH);
+
+	timeHandle->seconds = BCDtobin(value);
+
+	// fetch minutes data
+	value = RTC_DS1307_read(RTC_DS1307_REG_MINUTES);
+	timeHandle->minutes = BCDtobin(value);
+
+	//fetch hours data
+	value = RTC_DS1307_read(RTC_DS1307_REG_HOURS);
+	// check if 6th bit is set.
+	if(value & (1 << 6)) // if bit 6 is set, then its 12 hour clock
+	{
+		if(value  & (1 << 5)) // if bit 5 is set, then it is PM
+		{
+			timeHandle->timeFormat = RTC_DS1307_TIME_FORMAT_12HRS_PM;
+		}
+		else
+		{
+			timeHandle->timeFormat = RTC_DS1307_TIME_FORMAT_12HRS_AM;
+		}
+		// get rid of bit 6 and bit 5 and fetch the hours data
+		value &= ~(0x3 << RTC_DS1307_REG_HOURS_AMPM_10HOUR);
+	}
+	else
+	{
+		timeHandle->timeFormat = RTC_DS1307_TIME_FORMAT_24HRS;
+		// get rid of bit 6 and fetch the hours data
+		value &= ~(1 << RTC_DS1307_REG_HOURS_12_24);
+	}
+	timeHandle->hours = BCDtobin(value);
 }
 
 /*
