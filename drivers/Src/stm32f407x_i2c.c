@@ -343,7 +343,7 @@ void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *TxBuffer, uint8_t len
 	pI2CHandle->pI2Cx->CR1 |= (1 << I2C_CR1_START);
 
 	// 2. Check if the start bit is set and then Read the SR1 register to clear the start bit
-	while(!(I2C_GetFlagStatus(pI2CHandle->pI2Cx,I2C_SR1_SB) == FLAG_SET));
+	while(!(I2C_GetFlagStatus(pI2CHandle->pI2Cx,I2C_SR1_SB)));
 	//uint32_t temp = pI2CHandle->pI2Cx->SR1;
 
 	// 3. Send the address of slave with transmission byte (0)

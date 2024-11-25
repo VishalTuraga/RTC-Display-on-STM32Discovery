@@ -17,13 +17,118 @@
  */
 
 #include <stdint.h>
+#include "ds1307.h"
+#include <stdio.h>
 
-#if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
-#endif
+char* get_day_of_week(uint8_t i);
+
+void number_to_string(uint8_t num, char* buf);
+
+char* time_to_string(RTC_Handle_time_t *time);
+
+char* date_to_string(RTC_Handle_date_t *date);
+
 
 int main(void)
 {
-    /* Loop forever */
-	for(;;);
+	RTC_Handle_time_t time;
+	RTC_Handle_date_t date;
+
+	printf("RTC Test\n");
+
+	if(RTC_DS1307_Init())
+	{
+		printf("RTC init failed\n");
+		while(1);
+	}
+
+	date.day = THURSDAY;
+	date.date = 21;
+	date.month = 11;
+	date.year = 24;
+
+	time.timeFormat = RTC_DS1307_TIME_FORMAT_12HRS_PM;
+	time.hours = 11;
+	time.minutes = 13;
+	time.seconds = 0;
+
+	RTC_DS1307_setTime(&time);
+	RTC_DS1307_setFullDate(&date);
+
+
+	RTC_DS1307_getTime(&time);
+	RTC_DS1307_getFullDate(&date);
+
+	char *ampm;
+	if(time.timeFormat != RTC_DS1307_TIME_FORMAT_24HRS)
+	{
+		ampm = (time.timeFormat) ? "PM" : "AM";
+		printf("Current Time: %s %s",time_to_string(&time),ampm);
+	}else
+	{
+		printf("Current Time: %s\n",time_to_string(&time));
+	}
+
+	printf("Current Date: %s <%s> \n",date_to_string(&date),get_day_of_week(date.day));
+
+	return 0;
+}
+
+char* get_day_of_week(uint8_t i)
+{
+	char* days[] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+
+	return days[i-1];
+}
+
+
+void number_to_string(uint8_t num, char* buf)
+{
+	if(num < 10)
+	{
+		buf[0] = '0';
+		buf[1] = num+48;
+	}
+	else if(num >= 10 && num < 99)
+	{
+		buf[0] = (num/10) + 48;
+		buf[1] = (num % 10) + 48;
+	}
+}
+
+char* time_to_string(RTC_Handle_time_t *time)
+{
+	//return format is "hh:mm:ss"
+
+	static char buf[9];
+
+	buf[2] = ':';
+	buf[5] = ':';
+
+	number_to_string(time->hours, buf);
+	number_to_string(time->minutes, &buf[3]);
+	number_to_string(time->seconds, &buf[6]);
+
+	buf[8] = '\0';
+
+	return buf;
+
+}
+
+char* date_to_string(RTC_Handle_date_t *date)
+{
+	// return format is "dd/mm/yy"
+	static char buf[9];
+
+	buf[2] = ':';
+	buf[5] = ':';
+
+	number_to_string(date->date, buf);
+	number_to_string(date->month, &buf[3]);
+	number_to_string(date->year, &buf[6]);
+
+	buf[8] = '\0';
+
+	return buf;
+
 }
